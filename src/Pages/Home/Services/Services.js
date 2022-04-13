@@ -8,7 +8,7 @@ const Services = () => {
 
   return (
     <section>
-      <div className="container">
+      <div id="services" className="container">
         <h1 className="text-warning text-center my-5">Our Services</h1>
         <Row xs={1} md={3} className="g-4">
           {services.map((service) => (
