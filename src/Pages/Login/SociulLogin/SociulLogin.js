@@ -1,12 +1,20 @@
 import React from "react";
-import { useSignInWithGoogle } from "react-firebase-hooks/auth";
+import {
+  useSignInWithGithub,
+  useSignInWithGoogle,
+} from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
 
 const SociulLogin = () => {
   const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
+  const [signInWithGithub, user1, loading1, error1] = useSignInWithGithub(auth);
   let errorCap;
-  if (error) {
-    errorCap = <p className="text-danger my-2">Error: {error.message}</p>;
+  if (error || error1) {
+    errorCap = (
+      <p className="text-danger my-2">
+        Error: {error?.message} {error1?.message}
+      </p>
+    );
   }
   return (
     <div>
@@ -29,7 +37,10 @@ const SociulLogin = () => {
         >
           Google Sign In
         </button>
-        <button className="btn btn-info text-white py-2 px-5">
+        <button
+          onClick={() => signInWithGithub()}
+          className="btn btn-info text-white py-2 px-5"
+        >
           GitHub Sign In
         </button>
       </div>
