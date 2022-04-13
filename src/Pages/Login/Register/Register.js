@@ -9,7 +9,7 @@ const Register = () => {
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
   if (user) {
-    navigate("/login");
+    navigate("/home");
   }
   const formSubmit = (event) => {
     event.preventDefault();

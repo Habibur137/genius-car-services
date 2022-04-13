@@ -1,15 +1,18 @@
 import React, { useRef } from "react";
 import { Button, Form } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
+import SociulLogin from "../SociulLogin/SociulLogin";
 
 const Login = () => {
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
   const navigate = useNavigate();
+  const location = useLocation();
+  let from = location.state?.from?.pathname || "/";
   if (user) {
-    navigate("/home");
+    navigate(from, { replace: true });
   }
   const emailRef = useRef("");
   const passwordRef = useRef("");
@@ -19,6 +22,10 @@ const Login = () => {
     const password = passwordRef.current.value;
     signInWithEmailAndPassword(email, password);
   };
+  let errorCap;
+  if (error) {
+    errorCap = <p className="text-danger my-2">Error: {error.message}</p>;
+  }
   return (
     <div>
       <h2 className="text-primary text-center mt-3">Please Login</h2>
@@ -44,6 +51,7 @@ const Login = () => {
           <Form.Group className="mb-3" controlId="formBasicCheckbox">
             <Form.Check type="checkbox" label="Check me out" />
           </Form.Group>
+          {errorCap}
           <Button variant="primary" type="submit">
             Submit
           </Button>
@@ -55,6 +63,7 @@ const Login = () => {
           </Link>
         </p>
       </div>
+      <SociulLogin />
     </div>
   );
 };
