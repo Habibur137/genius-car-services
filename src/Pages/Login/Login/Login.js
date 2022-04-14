@@ -1,13 +1,18 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import {
+  useSendPasswordResetEmail,
+  useSignInWithEmailAndPassword,
+} from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
 import SociulLogin from "../SociulLogin/SociulLogin";
 
 const Login = () => {
+  const [agree, setAgree] = useState(false);
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
+  const [sendPasswordResetEmail] = useSendPasswordResetEmail(auth);
   const navigate = useNavigate();
   const location = useLocation();
   let from = location.state?.from?.pathname || "/";
@@ -16,12 +21,14 @@ const Login = () => {
   }
   const emailRef = useRef("");
   const passwordRef = useRef("");
+  const email = emailRef.current.value;
   const formSubmit = (event) => {
     event.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     signInWithEmailAndPassword(email, password);
   };
+
   let errorCap;
   if (error) {
     errorCap = <p className="text-danger my-2">Error: {error.message}</p>;
@@ -49,10 +56,16 @@ const Login = () => {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Check me out" />
+            <Form.Check
+              className={agree ? "text-danger" : "text-info"}
+              onClick={() => setAgree(!agree)}
+              name="check-box"
+              type="checkbox"
+              label="Accept terms and condition"
+            />
           </Form.Group>
           {errorCap}
-          <Button variant="primary" type="submit">
+          <Button variant="primary" type="submit" disabled={!agree}>
             Submit
           </Button>
         </Form>
@@ -60,6 +73,19 @@ const Login = () => {
           New To Genius Car?{" "}
           <Link to="/register" className="text-warning underline">
             Please Register
+          </Link>
+        </p>
+        <p>
+          Forfet Password?{" "}
+          <Link
+            onClick={async () => {
+              await sendPasswordResetEmail(email);
+              alert("Sent email");
+            }}
+            to="/register"
+            className="text-warning underline"
+          >
+            Reset Password
           </Link>
         </p>
       </div>
