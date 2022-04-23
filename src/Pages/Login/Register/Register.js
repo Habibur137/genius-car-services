@@ -1,23 +1,28 @@
 import React from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import {
+  useCreateUserWithEmailAndPassword,
+  useUpdateProfile,
+} from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
 import SociulLogin from "../SociulLogin/SociulLogin";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const Register = () => {
   const navigate = useNavigate();
+  const [updateProfile, updating, updateError] = useUpdateProfile(auth);
   const [createUserWithEmailAndPassword, user, loading, error] =
-    useCreateUserWithEmailAndPassword(auth);
-  if (user) {
-    navigate("/home");
-  }
-  const formSubmit = (event) => {
+    useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
+  const formSubmit = async (event) => {
     event.preventDefault();
     const name = event.target.name.value;
     const email = event.target.email.value;
     const password = event.target.password.value;
-    createUserWithEmailAndPassword(email, password);
+    await createUserWithEmailAndPassword(email, password);
+    await updateProfile({ displayName: name });
+    alert("Updated profile");
+    navigate("/home");
   };
   return (
     <div>

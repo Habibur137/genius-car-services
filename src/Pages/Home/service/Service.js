@@ -1,10 +1,10 @@
 import React from "react";
 import { Card, Col, Row } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Service = ({ service }) => {
   const navigate = useNavigate();
-  const { name, img, description, price, id } = service;
+  const { name, img, description, price, _id } = service;
   return (
     <Col>
       <Card>
@@ -14,11 +14,12 @@ const Service = ({ service }) => {
           <Card.Text>{description}</Card.Text>
           <Card.Text>${price}</Card.Text>
           <button
-            onClick={() => navigate(`/service/${id}`)}
+            onClick={() => navigate(`/service/${_id}`)}
             className="btn btn-primary"
           >
             Buy: {name}
           </button>
+          {/* <Link to={`/`}>Update</Link> */}
         </Card.Body>
       </Card>
     </Col>

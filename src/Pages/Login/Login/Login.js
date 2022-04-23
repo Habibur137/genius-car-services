@@ -7,12 +7,17 @@ import {
 } from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
 import SociulLogin from "../SociulLogin/SociulLogin";
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [agree, setAgree] = useState(false);
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
-  const [sendPasswordResetEmail] = useSendPasswordResetEmail(auth);
+  const [sendPasswordResetEmail] = useSendPasswordResetEmail(auth, {
+    sendEmailVerification: true,
+  });
   const navigate = useNavigate();
   const location = useLocation();
   let from = location.state?.from?.pathname || "/";
@@ -77,19 +82,19 @@ const Login = () => {
         </p>
         <p>
           Forfet Password?{" "}
-          <Link
+          <button
             onClick={async () => {
               await sendPasswordResetEmail(email);
-              alert("Sent email");
+              toast("Sent email");
             }}
-            to="/register"
             className="text-warning underline"
           >
             Reset Password
-          </Link>
+          </button>
         </p>
       </div>
       <SociulLogin />
+      <ToastContainer />
     </div>
   );
 };
