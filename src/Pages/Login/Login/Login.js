@@ -22,6 +22,7 @@ const Login = () => {
   const location = useLocation();
   let from = location.state?.from?.pathname || "/";
   if (user) {
+    console.log(user);
     navigate(from, { replace: true });
   }
   const emailRef = useRef("");
@@ -94,7 +95,6 @@ const Login = () => {
         </p>
       </div>
       <SociulLogin />
-      <ToastContainer />
     </div>
   );
 };

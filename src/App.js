@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import "./App.css";
 import About from "./Pages/About/About";
 import CheckOut from "./Pages/CheckOut/CheckOut";
@@ -21,18 +22,26 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/register" element={<Register />} />
         <Route
-          path="/checkout"
+          path="/checkout/:serviceId"
           element={
             <RequireAuth>
               <CheckOut />
             </RequireAuth>
           }
         />
-        <Route path="/service/:serviceId" element={<ServiceDetail />} />
+        <Route
+          path="/service/:serviceId"
+          element={
+            <RequireAuth>
+              <ServiceDetail />
+            </RequireAuth>
+          }
+        />
 
         <Route path="/login" element={<Login />} />
       </Routes>
       <Footer />
+      <ToastContainer />
     </div>
   );
 }

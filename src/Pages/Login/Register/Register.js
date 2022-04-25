@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Form } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   useCreateUserWithEmailAndPassword,
   useUpdateProfile,
@@ -11,9 +11,14 @@ import { sendPasswordResetEmail } from "firebase/auth";
 
 const Register = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  let from = location.state?.from?.pathname || "/";
   const [updateProfile, updating, updateError] = useUpdateProfile(auth);
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
+  if (user) {
+    navigate(from, { replace: true });
+  }
   const formSubmit = async (event) => {
     event.preventDefault();
     const name = event.target.name.value;
@@ -22,7 +27,6 @@ const Register = () => {
     await createUserWithEmailAndPassword(email, password);
     await updateProfile({ displayName: name });
     alert("Updated profile");
-    navigate("/home");
   };
   return (
     <div>
